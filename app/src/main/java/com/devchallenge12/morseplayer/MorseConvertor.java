@@ -1,5 +1,6 @@
 package com.devchallenge12.morseplayer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -269,7 +270,32 @@ public class MorseConvertor {
         return outMsg.toString();
     }
 
-    public static String textToMorseAudio(String msg){
-        return new String();
+    public static void textToMorseAudio(String msg, String filePath){
+        List<Integer> intMsg = textToMorse(msg);
+        MorseMidi morseMidi = new MorseMidi();
+        for(int item : intMsg){
+            switch (item){
+                case DOT_ID:
+                    morseMidi.setDot();
+                    break;
+                case DASH_ID:
+                    morseMidi.setDash();
+                    break;
+                case INSP_ID:
+                    morseMidi.setInsp();
+                    break;
+                case LSP_ID:
+                    morseMidi.setLsp();
+                    break;
+                case WSP_ID:
+                    morseMidi.setWsp();
+                    break;
+            }
+        }
+        try {
+            morseMidi.writeToFile(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
