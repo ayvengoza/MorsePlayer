@@ -3,6 +3,7 @@ package com.devchallenge12.morseplayer;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -24,13 +25,18 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 0;
+    private static final int PROGRESS_DEVIDER = 10;
+
     private EditText mMorseInput;
     private TextView mMorseOutput;
     private SeekBar mSeekProgress;
     private TextView mSpeedStatus;
     private SeekBar mSeekSpeed;
     private Button mPlayPause;
+
     private MediaPlayer mMediaPlayer;
+    private Handler mHandler;
+    private Runnable mRunnable;
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
@@ -59,7 +65,11 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+            switch (seekBar.getId()){
+                case R.id.sbSeekProgress:
+                    setAudioProgress(progress, fromUser);
+                    break;
+            }
         }
 
         @Override
@@ -73,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private void setAudioProgress(int progress, boolean fromUser) {
+        if(mMediaPlayer != null && fromUser){
+            mMediaPlayer.seekTo(progress * PROGRESS_DEVIDER);
+        }
+    }
 
 
     @Override
@@ -95,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
 
         mPlayPause = (Button) findViewById(R.id.btnPlayPause);
         mPlayPause.setOnClickListener(mOnClickListener);
+
+        mHandler = new Handler();
     }
 
     public void startPlayer(){
@@ -117,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 mMediaPlayer.setDataSource(fd);
                 mMediaPlayer.prepare();
                 mMediaPlayer.start();
+                initializeSeekBar();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -155,12 +173,36 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
+    private void initializeSeekBar(){
+        mSeekProgress.setMax(mMediaPlayer.getDuration()/PROGRESS_DEVIDER);
+
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if(mMediaPlayer!= null){
+                    int mCurrentPosition = mMediaPlayer.getCurrentPosition()/PROGRESS_DEVIDER;
+                    mSeekProgress.setProgress(mCurrentPosition);
+                }
+                mHandler.postDelayed(mRunnable, PROGRESS_DEVIDER);
+            }
+        };
+        mHandler.postDelayed(mRunnable, PROGRESS_DEVIDER);
+    }
+
+    private void stopPlaying(){
         if(mMediaPlayer != null){
             mMediaPlayer.stop();
             mMediaPlayer.release();
+            mMediaPlayer = null;
+            if(mHandler != null){
+                mHandler.removeCallbacks(mRunnable);
+            }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopPlaying();
     }
 }
