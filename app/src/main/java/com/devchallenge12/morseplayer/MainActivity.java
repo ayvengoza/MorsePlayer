@@ -129,12 +129,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void playAction(){
-        if(isAudioRelevant){
-            play();
-        } else {
+        if(mMediaPlayer == null || !isAudioRelevant){
             createPlayer();
-            play();
         }
+        play();
     }
 
     public void createPlayer(){
@@ -213,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void stopAction(){
         if(mMediaPlayer != null){
+            endAction();
             mMediaPlayer.stop();
             mMediaPlayer.release();
             mMediaPlayer = null;
