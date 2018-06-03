@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             isAudioRelevant = false;
-            setSeekPositionProgress(0);
             setMorseOutputText(MorseConvertor.textToMorseMsg(s.toString()));
         }
 
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         mMorseInput.addTextChangedListener(mTextWatcher);
 
         mMorseOutput = (TextView) findViewById(R.id.tvMorseOutput);
+        mMorseOutput.setMovementMethod(new ScrollingMovementMethod());
 
         mSeekPosition = (SeekBar) findViewById(R.id.sbSeekPosition);
         mSeekPosition.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
@@ -189,8 +190,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void pauseAction(){
-        storeCurrentPosition();
-        pause();
+        if(isAudioRelevant) {
+            storeCurrentPosition();
+            pause();
+        } else {
+            endAction();
+        }
     }
 
     private void pause(){
