@@ -12,9 +12,9 @@ public class MorseMidi {
     static final int INSP = 8;
     static final int LSP = 24;
     static final int WSP = 56;
-    static final int NOTE = 80;
-    static final int INSTRUMENT = 1;
-    static final int VELOCITY = 127;
+    static final int NOTE = 72;
+    static final int INSTRUMENT = 16;
+    static final int VELOCITY = 70;
 
     static final int header[] = new int[]{
                     0x4d, 0x54, 0x68, 0x64, 0x00, 0x00, 0x00, 0x06,
@@ -30,7 +30,7 @@ public class MorseMidi {
 
     static final int tempoEvent[] = new int[]{
                     0x00, 0xFF, 0x51, 0x03,
-                    0x07, 0xA1, 0x20 // Tempo 200000
+                    0x01, 0xD4, 0xC0 // Tempo (period) 150000
             };
 
     static final int keySigEvent[] = new int[]

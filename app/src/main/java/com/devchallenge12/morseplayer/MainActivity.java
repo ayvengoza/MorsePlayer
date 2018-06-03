@@ -268,9 +268,13 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (mMediaPlayer != null && fromUser) {
                 if (mMediaPlayer.isPlaying()) {
-                    PlaybackParams params = mMediaPlayer.getPlaybackParams();
-                    params.setSpeed(AUDIO_SPEEDS[progress % AUDIO_SPEEDS.length]);
-                    mMediaPlayer.setPlaybackParams(params);
+                    try {
+                        PlaybackParams params = mMediaPlayer.getPlaybackParams();
+                        params.setSpeed(AUDIO_SPEEDS[progress % AUDIO_SPEEDS.length]);
+                        mMediaPlayer.setPlaybackParams(params);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
             setSpeedStatus(progress);
