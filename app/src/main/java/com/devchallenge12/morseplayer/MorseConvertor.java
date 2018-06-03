@@ -238,8 +238,6 @@ public class MorseConvertor {
             } else {
                 switch (c){
                     case ' ' :
-                    case '\t':
-                    case '\n':
                         msgList.add(WSP_ID);
                         break;
                 }
