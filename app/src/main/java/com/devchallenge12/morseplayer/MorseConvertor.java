@@ -1,5 +1,7 @@
 package com.devchallenge12.morseplayer;
 
+import android.support.annotation.NonNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -228,7 +230,7 @@ public class MorseConvertor {
 
     private static List<Integer> textToMorse(String msg){
         ArrayList<Integer> msgList = new ArrayList<>();
-        char[] charsMsg = msg.toUpperCase().toCharArray();
+        char[] charsMsg = prepareMessage(msg);
         for(char c : charsMsg){
             if(morseMap.containsKey(c)){
                 msgList.addAll(Arrays.asList(morseMap.get(c)));
@@ -245,6 +247,19 @@ public class MorseConvertor {
         }
         return msgList;
     }
+
+    private static char[] prepareMessage(String msg){
+        String[] words = msg.toUpperCase().split("\\s");
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String word : words){
+            if(word.length() != 0){
+                stringBuilder.append(word);
+                stringBuilder.append(" ");
+            }
+        }
+        return stringBuilder.toString().toCharArray();
+    }
+
     public static String textToMorseMsg(String msg){
         StringBuffer outMsg = new StringBuffer();
         List<Integer> intMsg = textToMorse(msg);
