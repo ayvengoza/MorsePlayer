@@ -13,7 +13,7 @@ public class MorseMidi {
     static final int LSP = 24;
     static final int WSP = 56;
     static final int NOTE = 80;
-    static final int INSTRUMENT = 21;
+    static final int INSTRUMENT = 1;
     static final int VELOCITY = 127;
 
     static final int header[] = new int[]{
@@ -110,15 +110,15 @@ public class MorseMidi {
     }
 
     public void setInsp(){
-        setNote(INSP, NOTE, VELOCITY);
+        setNote(INSP, NOTE, 0);
     }
 
     public void setLsp(){
-        setNote(LSP, NOTE, VELOCITY);
+        setNote(LSP, NOTE, 0);
     }
 
     public void setWsp(){
-        setNote(WSP, NOTE, VELOCITY);
+        setNote(WSP, NOTE, 0);
     }
 
     //Change midi instruments from 0 to 127
