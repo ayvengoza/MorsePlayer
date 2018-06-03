@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void createPlayer(){
         String inputText = mMorseInput.getText().toString();
-        String filePath = "/sdcard/morse.midi";
+        String filePath = this.getFilesDir().getPath() + "/morse.midi";
         FileDescriptor fd = null;
         if(inputText.length() > 0 && checkPermission()){
             MorseConvertor.textToMorseAudio(inputText, filePath);
@@ -314,17 +314,11 @@ public class MainActivity extends AppCompatActivity {
                 getApplicationContext(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         );
-        if(permission != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
                     this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-
-            } else {
-                ActivityCompat.requestPermissions(
-                        this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        PERMISSION_REQUEST_CODE);
-            }
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_CODE);
         } else {
             return true;
         }
